@@ -8,6 +8,7 @@ class SpringBootTokenManagerApplicationTests {
 
 	@Test
 	void contextLoads() {
+		
 	}
 
 }
