@@ -43,4 +43,19 @@ public class TokenService {
         
         return new AccountResDto(userId, username);
     }
+    
+    public ResponseDto patchAccessToekn(HttpServletRequest request) {
+        String userId = null, username = null;
+        TokenDto tokenDto = null;
+        try {
+            String refreshToken = jwtUtil.getHeaderToken(request, "Refresh");
+            userId = jwtUtil.getInfoFromToken(refreshToken, "userId");
+            username = jwtUtil.getInfoFromToken(refreshToken, "username");
+            tokenDto = jwtUtil.createAllToken(userId, username);
+            return new ResponseDto("Success", HttpStatus.OK.value(), tokenDto);
+        } catch (IllegalArgumentException e){
+            logger.error("Expired JWT token", e);
+        }
+        return new ResponseDto("RefreshToken Expire", HttpStatus.UNAUTHORIZED.value(), tokenDto);
+    }
 }

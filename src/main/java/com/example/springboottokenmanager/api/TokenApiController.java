@@ -20,6 +20,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -43,6 +44,16 @@ public class TokenApiController {
     public ResponseEntity<AccountResDto> getUserInfo(HttpServletResponse response, HttpServletRequest request) {
         AccountResDto accountResDto = tokenService.getUserInfo(request);
         return new ResponseEntity<>(accountResDto, HttpStatus.OK);
+    }
+
+    @PatchMapping(value = "/api/patch/token")
+    public ResponseEntity<ResponseDto> patchAccessToekn(HttpServletResponse response, HttpServletRequest request) {
+        ResponseDto responseDto = tokenService.patchAccessToekn(request);
+        if(responseDto.getStatusCode() == 200) {
+            setHeader(response, responseDto.getToken());
+        };
+
+        return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 
     private void setHeader(HttpServletResponse response, TokenDto tokenDto) {

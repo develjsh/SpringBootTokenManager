@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.example.springboottokenmanager.dto.ResponseDto;
@@ -32,15 +33,12 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         // WebSecurityConfig 에서 보았던 UsernamePasswordAuthenticationFilter 보다 먼저 동작을 하게 됩니다.
         String accessToken = jwtUtil.getHeaderToken(request, "Access");
         String refreshToken = jwtUtil.getHeaderToken(request, "Refresh");
-        
-        logger.info("accessToken = {}", accessToken);
-        logger.info("refreshToken = {}", refreshToken);
-
-        if(!accessToken.isBlank()) {
+        boolean b = StringUtils.hasText(accessToken);
+        if(StringUtils.hasText(accessToken)) {
             if(jwtUtil.tokenValidation(accessToken)) {
                 setAuthentication(accessToken);
             };
-        } else if (!refreshToken.isBlank()) {
+        } else if (StringUtils.hasText(refreshToken)) {
             boolean isRefreshToken = jwtUtil.refreshTokenValidation(refreshToken);
             if (isRefreshToken) {
                 String userId = jwtUtil.getInfoFromToken(refreshToken, "userId");
