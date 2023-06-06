@@ -19,6 +19,8 @@ JWT token을 활용하는 프로젝트입니다.
     - request : refreshToken으로
     - response : accessToken / refreshToken
 
+**response는 ResponseDto 오버로딩을 통해 상황에 맞게 보낼 수 있도록 구현했습니다.**
+
 **조건**
 - accessToken : 만료기간 30분
 - refreshToken : 만료기간 1주일
@@ -29,7 +31,7 @@ Github를 통해 파일을 다운받아 IDE에서 실행을 해줍니다.
 ## 테스트
 ### 로컬 호스트
 - Token 신규 생성 API : POST http://localhost:8080/api/create/token
-body에 JSON 형태로 사용자ID와 사용자명 담아 호출합니다.
+    - body에 JSON 형태로 사용자ID와 사용자명 담아 호출합니다.
 
 **예시**
 {
@@ -37,7 +39,7 @@ body에 JSON 형태로 사용자ID와 사용자명 담아 호출합니다.
     "username": "홍길동"
 }
 
-/api/create/**는 WebSecurityConfig에서 SecurityFilterChain에서 제외시켜두어 token이 없는 상태에서도  호출이 가능합니다.
+    - /api/create/**는 WebSecurityConfig에서 SecurityFilterChain에서 제외시켜두어 token이 없는 상태에서도  호출이 가능합니다.
 
 - Token 조회 API : GET http://localhost:8080/api/search/userInfo
 Headers에 Access_Token과 Refresh_Token 값을 담아 호출하면 해당 token에 사용자ID와 사용자명 값을 가져와 return 합니다.
