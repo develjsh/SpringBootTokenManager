@@ -7,8 +7,9 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import static org.springframework.security.config.Customizer.withDefaults;
+import com.example.springboottokenmanager.jwt.filter.JwtAuthFilter;
 import com.example.springboottokenmanager.jwt.util.JwtUtil;
 
 import lombok.RequiredArgsConstructor;
@@ -22,20 +23,21 @@ public class WebSecurityConfig{
     
     @Bean
     public WebSecurityCustomizer ignoringCustomizer() {
-        return (web) -> web.ignoring().antMatchers("/h2-console/**");
+        return (web) -> web.ignoring().antMatchers("/h2-console/**", "/api/create/**");
     }
     
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.cors(withDefaults());
+        http.cors();
         http.csrf().disable();
-        http.sessionManagement(management -> management.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
-        http                            
+        http
+            .httpBasic().disable()
             .authorizeHttpRequests()
-            .antMatchers("/api/createToken/**").permitAll()
-            .anyRequest().authenticated();
-
+            .anyRequest().authenticated()
+            .and().addFilterBefore(new JwtAuthFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);
+            
         return http.build();
     }
 }

@@ -30,27 +30,30 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         // WebSecurityConfig 에서 보았던 UsernamePasswordAuthenticationFilter 보다 먼저 동작을 하게 됩니다.
-
-        // Access / Refresh 헤더에서 토큰을 가져옴.
         String accessToken = jwtUtil.getHeaderToken(request, "Access");
         String refreshToken = jwtUtil.getHeaderToken(request, "Refresh");
         
         logger.info("accessToken = {}", accessToken);
         logger.info("refreshToken = {}", refreshToken);
 
-        if(accessToken != null) {
+        if(!accessToken.isBlank()) {
             if(jwtUtil.tokenValidation(accessToken)) {
-                setAuthentication(jwtUtil.getUserIdFromToken(accessToken));
+                setAuthentication(accessToken);
             };
-        } else if (refreshToken != null) {
+        } else if (!refreshToken.isBlank()) {
             boolean isRefreshToken = jwtUtil.refreshTokenValidation(refreshToken);
             if (isRefreshToken) {
-                String loginId = jwtUtil.getUserIdFromToken(refreshToken);
-                String newAccessToken = jwtUtil.createToken(loginId, "Access");
+                String userId = jwtUtil.getInfoFromToken(refreshToken, "userId");
+                String username = jwtUtil.getInfoFromToken(refreshToken, "username");
+                
+                String newAccessToken = jwtUtil.createToken(userId, username, "Access");
 
                 jwtUtil.setHeaderAccessToken(response, newAccessToken);
-                setAuthentication(jwtUtil.getUserIdFromToken(newAccessToken));
-            }; 
+                setAuthentication(newAccessToken);
+            } else {
+                jwtExceptionHandler(response, "RefreshToken Expired", HttpStatus.BAD_REQUEST);
+                return;
+            };
         } else {
             jwtExceptionHandler(response, "RefreshToken Expired", HttpStatus.BAD_REQUEST);
             return;
@@ -63,8 +66,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
      * SecurityContext 에 Authentication 객체 저장
      * @param userId
      */
-    public void setAuthentication(String userId) {
-        Authentication authentication = jwtUtil.createAuthentication(userId);
+    public void setAuthentication(String token) {
+        Authentication authentication = jwtUtil.getAuthentication(token);
         SecurityContextHolder.getContext().setAuthentication(authentication);
     }
 
