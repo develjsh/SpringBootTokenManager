@@ -2,11 +2,13 @@
 JWT token을 활용하는 프로젝트입니다.
 따로 DB에 token 정보를 저장하지 않으며, token에 사용자 ID와 사용자명을 저장하여 만료되지 않으면 사용할 수 있습니다.
 
+
 **설정**
 - Spring boot 2.7.1
 - Gradle - Groovy
 - Java 17
 - Jar
+
 
 **구현**
 - Token 신규 생성 API : 신규로 accessToken과 refreshToken 생성하는 API endpoint
@@ -21,15 +23,18 @@ JWT token을 활용하는 프로젝트입니다.
 
 **response는 ResponseDto 오버로딩을 통해 상황에 맞게 보낼 수 있도록 구현했습니다.**
 
+
 **조건**
 - accessToken : 만료기간 30분
 - refreshToken : 만료기간 1주일
 
+
 ## 프로젝트 설치 및 실행 방법
 Github를 통해 파일을 다운받아 IDE에서 실행을 해줍니다.
 
+
 ## 테스트
-### 로컬 호스트
+**로컬 호스트**
 - Token 신규 생성 API : POST http://localhost:8080/api/create/token
     - body에 JSON 형태로 사용자ID와 사용자명 담아 호출합니다.
     - /api/create/**는 WebSecurityConfig에서 SecurityFilterChain에서 제외시켜두어 token이 없는 상태에서도  호출이 가능합니다.

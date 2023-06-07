@@ -13,7 +13,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
-import com.example.springboottokenmanager.entity.Account;
+import com.example.springboottokenmanager.dto.AccountDto;
 import com.example.springboottokenmanager.jwt.dto.TokenDto;
 
 import io.jsonwebtoken.Claims;
@@ -135,10 +135,10 @@ public class JwtUtil {
         String userId = getInfoFromToken(toekn, "userId");
         String username = getInfoFromToken(toekn, "username");
         
-        Account account = new Account();
-        account.setUserId(userId);
-        account.setUsername(username);
-        return new UsernamePasswordAuthenticationToken(account, "", null);
+        AccountDto accountDto = new AccountDto();
+        accountDto.setUserId(userId);
+        accountDto.setUsername(username);
+        return new UsernamePasswordAuthenticationToken(accountDto, "", null);
     }
 
     /**
