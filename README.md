@@ -31,6 +31,7 @@ JWT token을 활용하는 프로젝트입니다.
 
 ## 프로젝트 설치 및 실행 방법
 Github를 통해 파일을 다운받아 IDE에서 실행을 해줍니다.
+또는 올려둔 springboottokenmanager-0.0.1-SNAPSHOT.jar를 java -jar springboottokenmanager-0.0.1-SNAPSHOT.jar를 통해 실행시켜도 됩니다.
 
 
 ## 테스트
