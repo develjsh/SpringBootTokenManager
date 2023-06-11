@@ -23,7 +23,8 @@ public class WebSecurityConfig{
     
     @Bean
     public WebSecurityCustomizer ignoringCustomizer() {
-        return (web) -> web.ignoring().antMatchers("/h2-console/**", "/api/create/**");
+        return (web) -> web.ignoring().antMatchers("/h2-console/**", "/api/create/**", 
+        "/swagger-ui/**", "/v3/api-docs/**");
     }
     
     @Bean
