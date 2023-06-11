@@ -8,6 +8,7 @@ JWT token을 활용하는 프로젝트입니다.
 - Gradle - Groovy
 - Java 17
 - Jar
+- springdoc-openapi-ui 1.6.12(swaggerUI and json API (along with yaml format))
 
 
 **구현**
@@ -51,3 +52,9 @@ Headers에 Access_Token과 Refresh_Token 값을 담아 호출하면 해당 token
 
 - AccessToken 갱신 API : PATCH http://localhost:8080/api/patch/token
 Headers에 Refresh_Token 값을 담아 호출하면 Refresh_Token 값을 통해 새로운 Access_Token을 발급합니다.
+
+
+## springdoc
+현재 Spring security를 사용하기 떄문에 springdoc 추가 후 http://localhost:port/swagger-ui/index.html을 호출하게 되면
+"Failed to load remote configuration." 이 발생하것을 볼 수 있습니다.
+해결 방법은 WebSecurityConfig에 WebSecurityCustomizer에 "/swagger-ui/**", "/v3/api-docs/**"를 추가해주면 됩니다.
